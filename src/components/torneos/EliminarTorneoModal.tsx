@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Trash2, AlertTriangle } from 'lucide-react';
 import { torneoService } from '../../services/api';
 import type { Torneo } from '../../types';
-import EstadoBadgeTorneo from '../EstadoBadgeTorneo';
+import EstadoBadgeTorneo from '../shared/EstadoBadgeTorneo';
 
 interface EliminarTorneoModalProps {
   torneo: Torneo;

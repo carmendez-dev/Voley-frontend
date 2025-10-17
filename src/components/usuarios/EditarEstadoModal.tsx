@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Upload, Image as ImageIcon } from 'lucide-react';
 import { pagoService, uploadService } from '../../services/api';
 import type { Pago, PagoProcesarRequest } from '../../types';
-import EstadoBadge from '../EstadoBadge';
+import EstadoBadge from '../shared/EstadoBadge';
 
 interface EditarEstadoModalProps {
   pago: Pago;

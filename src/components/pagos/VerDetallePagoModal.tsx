@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, Calendar, DollarSign, CreditCard, FileText, User, Image as ImageIcon } from 'lucide-react';
 import type { Pago } from '../../types';
-import EstadoBadge from '../EstadoBadge';
+import EstadoBadge from '../shared/EstadoBadge';
 
 interface VerDetallePagoModalProps {
   pago: Pago;

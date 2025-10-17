@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, User, DollarSign, Calendar, CreditCard, Edit, Trash2, Eye } from 'lucide-react';
 import { pagoService } from '../../services/api';
 import type { Pago } from '../../types';
-import EstadoBadge from '../EstadoBadge';
+import EstadoBadge from '../shared/EstadoBadge';
 
 interface VerPagosUsuarioModalProps {
   cedulaUsuario: string; // Aunque se llama cedulaUsuario, ahora recibe el ID

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Eye, DollarSign } from 'lucide-react';
-import { pagoService, usuarioService } from '../services/api';
-import type { Pago, Usuario } from '../types';
-import CrearPagoModal from './modals/CrearPagoModal';
-import EditarEstadoModal from './modals/EditarEstadoModal';
-import VerPagosUsuarioModal from './modals/VerPagosUsuarioModal';
-import VerDetallePagoModal from './modals/VerDetallePagoModal';
+import { pagoService, usuarioService } from '../../services/api';
+import type { Pago, Usuario } from '../../types';
+import CrearPagoModal from './CrearPagoModal';
+import VerPagosUsuarioModal from './VerPagosUsuarioModal';
+import VerDetallePagoModal from './VerDetallePagoModal';
+import EditarEstadoModal from '../usuarios/EditarEstadoModal';
 
 const GestionPagos: React.FC = () => {
   const [pagos, setPagos] = useState<Pago[]>([]);

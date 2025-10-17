@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Navigation from './components/Navigation';
-import GestionPagos from './components/GestionPagos';
-import GestionUsuarios from './components/GestionUsuarios';
-import GestionTorneos from './components/GestionTorneos';
-import Reportes from './components/Reportes';
+import GestionPagos from './components/pagos/GestionPagos';
+import GestionUsuarios from './components/usuarios/GestionUsuarios';
+import GestionEquipos from './components/equipos/GestionEquipos';
+import GestionTorneos from './components/torneos/GestionTorneos';
+import GestionCategorias from './components/categorias/GestionCategorias';
+import Reportes from './components/reportes/Reportes';
 import { Settings } from 'lucide-react';
 
 function App() {
@@ -15,8 +17,12 @@ function App() {
         return <GestionPagos />;
       case 'usuarios':
         return <GestionUsuarios />;
+      case 'equipos':
+        return <GestionEquipos />;
       case 'torneos':
         return <GestionTorneos />;
+      case 'categorias':
+        return <GestionCategorias />;
       case 'reportes':
         return <Reportes />;
       case 'configuracion':

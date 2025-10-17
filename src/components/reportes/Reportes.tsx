@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, DollarSign, Users, Calendar, Download } from 'lucide-react';
-import { pagoService, usuarioService } from '../services/api';
-import type { Pago, Usuario } from '../types';
-import EstadoBadge from './EstadoBadge';
+import { pagoService, usuarioService } from '../../services/api';
+import type { Pago, Usuario } from '../../types';
+import EstadoBadge from '../shared/EstadoBadge';
 
 const Reportes: React.FC = () => {
   const [pagos, setPagos] = useState<Pago[]>([]);

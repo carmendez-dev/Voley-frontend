@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, CreditCard, BarChart3, Settings, Trophy } from 'lucide-react';
+import { Users, CreditCard, BarChart3, Settings, Trophy, Award, UserCheck } from 'lucide-react';
 
 interface NavigationProps {
   activeSection: string;
@@ -10,7 +10,9 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, onSectionChange 
   const menuItems = [
     { id: 'pagos', label: 'Gestión de Pagos', icon: CreditCard },
     { id: 'usuarios', label: 'Usuarios', icon: Users },
+    { id: 'equipos', label: 'Equipos', icon: UserCheck },
     { id: 'torneos', label: 'Torneos', icon: Trophy },
+    { id: 'categorias', label: 'Categorías', icon: Award },
     { id: 'reportes', label: 'Reportes', icon: BarChart3 },
     { id: 'configuracion', label: 'Configuración', icon: Settings }
   ];

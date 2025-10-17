@@ -179,3 +179,93 @@ export interface TorneoFiltros {
   estado?: EstadoTorneo;
   nombre?: string;
 }
+
+// ==================== CATEGORÍAS ====================
+
+export type GeneroCategoria = 'MASCULINO' | 'FEMENINO' | 'MIXTO';
+
+export interface Categoria {
+  idCategoria: number;
+  nombre: string;
+  descripcion?: string;
+  genero: GeneroCategoria;
+}
+
+export interface CategoriaCreateRequest {
+  nombre: string;
+  descripcion?: string;
+  genero: GeneroCategoria;
+}
+
+export interface CategoriaUpdateRequest {
+  nombre: string;
+  descripcion?: string;
+  genero: GeneroCategoria;
+}
+
+export interface CategoriaEstadisticas {
+  totalCategorias: number;
+  categoriasMasculinas: number;
+  categoriasFemeninas: number;
+  categoriasMixtas: number;
+}
+
+export interface CategoriaFiltros {
+  genero?: GeneroCategoria;
+  nombre?: string;
+}
+
+// ==================== RELACIONES TORNEO-CATEGORÍA ====================
+
+export interface TorneoCategoria {
+  idCategoria: number;
+  nombre: string;
+  idTorneo: number;
+  nombreTorneo: string;
+}
+
+export interface CategoriaTorneo {
+  idTorneo: number;
+  nombre: string;
+  idCategoria: number;
+  nombreCategoria: string;
+}
+
+// ===============================
+// INTERFACES PARA EQUIPOS
+// ===============================
+
+export interface Equipo {
+  idEquipo: number;
+  nombre: string;
+  descripcion?: string;
+}
+
+export interface EquipoCreateRequest {
+  nombre: string;
+  descripcion?: string;
+}
+
+export interface EquipoUpdateRequest {
+  nombre: string;
+  descripcion?: string;
+}
+
+export interface EquipoFiltros {
+  nombre?: string;
+}
+
+export interface EquipoCategoria {
+  idEquipo: number;
+  nombreEquipo: string;
+  descripcion?: string;
+  idCategoria: number;
+  nombreCategoria: string;
+}
+
+export interface CategoriaEquipo {
+  idCategoria: number;
+  nombreCategoria: string;
+  descripcionCategoria?: string;
+  genero: GeneroCategoria;
+}

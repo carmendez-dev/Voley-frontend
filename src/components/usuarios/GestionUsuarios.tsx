@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, User, Eye } from 'lucide-react';
-import { usuarioService } from '../services/api';
-import type { Usuario, Pago } from '../types';
-import VerPagosUsuarioModal from './modals/VerPagosUsuarioModal';
+import { usuarioService } from '../../services/api';
+import type { Usuario, Pago } from '../../types';
+import VerPagosUsuarioModal from '../pagos/VerPagosUsuarioModal';
 
 const GestionUsuarios: React.FC = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);

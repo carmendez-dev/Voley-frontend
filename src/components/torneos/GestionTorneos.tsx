@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Trophy, Filter, BarChart3, Users, Clock, CheckCircle } from 'lucide-react';
-import { torneoService } from '../services/api';
-import type { Torneo, TorneoFiltros, EstadoTorneo, TorneoEstadisticas } from '../types';
-import EstadoBadgeTorneo from './EstadoBadgeTorneo';
-import CrearTorneoModal from './modals/CrearTorneoModal';
-import EditarTorneoModal from './modals/EditarTorneoModal';
-import CambiarEstadoTorneoModal from './modals/CambiarEstadoTorneoModal';
-import EliminarTorneoModal from './modals/EliminarTorneoModal';
-import EstadisticasTorneoModal from './modals/EstadisticasTorneoModal';
+import { torneoService } from '../../services/api';
+import type { Torneo, TorneoFiltros, EstadoTorneo, TorneoEstadisticas } from '../../types';
+import EstadoBadgeTorneo from '../shared/EstadoBadgeTorneo';
+import CrearTorneoModal from './CrearTorneoModal';
+import EditarTorneoModal from './EditarTorneoModal';
+import CambiarEstadoTorneoModal from './CambiarEstadoTorneoModal';
+import EliminarTorneoModal from './EliminarTorneoModal';
+import EstadisticasTorneoModal from './EstadisticasTorneoModal';
+import GestionTorneoCategoriaModal from './GestionTorneoCategoriaModal';
 
 const GestionTorneos: React.FC = () => {
   const [torneos, setTorneos] = useState<Torneo[]>([]);
@@ -20,6 +21,7 @@ const GestionTorneos: React.FC = () => {
   const [showCambiarEstadoModal, setShowCambiarEstadoModal] = useState(false);
   const [showEliminarModal, setShowEliminarModal] = useState(false);
   const [showEstadisticasModal, setShowEstadisticasModal] = useState(false);
+  const [showCategoriasModal, setShowCategoriasModal] = useState(false);
   const [torneoSeleccionado, setTorneoSeleccionado] = useState<Torneo | null>(null);
   const [estadisticas, setEstadisticas] = useState<TorneoEstadisticas | null>(null);
 
@@ -96,6 +98,11 @@ const GestionTorneos: React.FC = () => {
     setShowEliminarModal(true);
   };
 
+  const handleGestionarCategorias = (torneo: Torneo) => {
+    setTorneoSeleccionado(torneo);
+    setShowCategoriasModal(true);
+  };
+
   const handleModalSuccess = () => {
     cargarTorneos();
     cargarEstadisticas();
@@ -108,6 +115,7 @@ const GestionTorneos: React.FC = () => {
     setShowCambiarEstadoModal(false);
     setShowEliminarModal(false);
     setShowEstadisticasModal(false);
+    setShowCategoriasModal(false);
     setTorneoSeleccionado(null);
   };
 
@@ -330,6 +338,13 @@ const GestionTorneos: React.FC = () => {
                         Estado
                       </button>
                       <button
+                        onClick={() => handleGestionarCategorias(torneo)}
+                        className="text-purple-600 hover:text-purple-900"
+                        title="Gestionar categorías del torneo"
+                      >
+                        Categorías
+                      </button>
+                      <button
                         onClick={() => handleEliminarTorneo(torneo)}
                         className="text-red-600 hover:text-red-900"
                         disabled={torneo.estado === 'Activo'}
@@ -383,6 +398,14 @@ const GestionTorneos: React.FC = () => {
         <EstadisticasTorneoModal
           estadisticas={estadisticas}
           onClose={onCloseModal}
+        />
+      )}
+
+      {showCategoriasModal && torneoSeleccionado && (
+        <GestionTorneoCategoriaModal
+          torneo={torneoSeleccionado}
+          onClose={onCloseModal}
+          onSuccess={handleModalSuccess}
         />
       )}
     </div>

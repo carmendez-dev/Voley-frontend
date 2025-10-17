@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, RefreshCw } from 'lucide-react';
 import { torneoService } from '../../services/api';
 import type { Torneo, EstadoTorneo } from '../../types';
-import EstadoBadgeTorneo from '../EstadoBadgeTorneo';
+import EstadoBadgeTorneo from '../shared/EstadoBadgeTorneo';
 
 interface CambiarEstadoTorneoModalProps {
   torneo: Torneo;
