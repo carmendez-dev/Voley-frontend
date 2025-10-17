@@ -1,12 +1,12 @@
-# 🏐 Sistema de Gestión de Pagos - Voleibol Frontend
+# Sistema de Gestión de Pagos - Voleibol Frontend
 
 Sistema web para la gestión de usuarios y pagos mensuales de un club de voleibol. Desarrollado con React, TypeScript y Vite.
 
-## 📋 Descripción
+## Descripción
 
 Aplicación frontend que permite administrar jugadores, registrar pagos mensuales, subir comprobantes de pago y generar reportes. Incluye funcionalidades de visualización de estado de pagos, filtrado por período y gestión completa de usuarios.
 
-## 🚀 Tecnologías
+## Tecnologías
 
 - **React 19.1.1** - Biblioteca de UI
 - **TypeScript 5.8.3** - Tipado estático
@@ -15,7 +15,7 @@ Aplicación frontend que permite administrar jugadores, registrar pagos mensuale
 - **Axios 1.7.9** - Cliente HTTP
 - **Lucide React** - Iconos
 
-## 📦 Instalación
+## Instalación
 
 ### Prerrequisitos
 
@@ -49,7 +49,7 @@ npm run dev
 
 La aplicación estará disponible en `http://localhost:5173/`
 
-## 🏗️ Scripts Disponibles
+## Scripts Disponibles
 
 ```bash
 npm run dev          # Inicia el servidor de desarrollo
@@ -58,7 +58,7 @@ npm run preview      # Previsualiza la build de producción
 npm run lint         # Ejecuta ESLint
 ```
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 voley-frontend/
@@ -79,14 +79,14 @@ voley-frontend/
 └── package.json
 ```
 
-## ✨ Funcionalidades Principales
+## Funcionalidades Principales
 
-### 👥 Gestión de Usuarios
+### Gestión de Usuarios
 - Listado de jugadores registrados
 - Información de contacto y estado de membresía
 - Ver historial de pagos por usuario
 
-### 💰 Gestión de Pagos
+### Gestión de Pagos
 - **Crear pago con comprobante** (flujo unificado)
   - Selección de usuario y período
   - Monto y método de pago
@@ -97,12 +97,12 @@ voley-frontend/
 - Visualizar comprobantes subidos
 - Estados: Pendiente, Pagado, Atraso, Rechazado
 
-### 📊 Reportes
+### Reportes
 - Resumen de pagos por período
 - Estadísticas de ingresos
 - Exportación de datos
 
-## 🔧 Características Técnicas
+## Características Técnicas
 
 ### Upload de Comprobantes
 - **Flujo unificado**: Crear pago + subir comprobante en una sola acción
@@ -117,7 +117,7 @@ voley-frontend/
 - Interceptores para manejo de errores
 - Tipado completo con TypeScript
 
-## 🎨 Componentes Principales
+## Componentes Principales
 
 ### Modales
 - **CrearPagoModal**: Crear pago con upload integrado de comprobante
@@ -146,7 +146,7 @@ const pago = await pagoService.crearPagoConComprobante(
 );
 ```
 
-## 🔐 Configuración del Backend
+## Configuración del Backend
 
 El frontend espera que el backend esté disponible en `http://localhost:8080/api` con los siguientes endpoints:
 
@@ -156,13 +156,13 @@ El frontend espera que el backend esté disponible en `http://localhost:8080/api
 - `PUT /pagos/{id}` - Actualizar pago
 - `GET /pagos/usuario/{id}` - Pagos de un usuario
 
-## 📚 Documentación Adicional
+## Documentación Adicional
 
 Para más información sobre la implementación del flujo de comprobantes, consulta:
 - `FLUJO-UNIFICADO-IMPLEMENTADO.md` - Guía completa del flujo unificado
 - `README-SISTEMA.md` - Documentación completa del sistema
 
-## 🤝 Contribuir
+## Contribuir
 
 1. Fork el proyecto
 2. Crea una rama para tu feature (`git checkout -b feature/NuevaCaracteristica`)
@@ -170,11 +170,11 @@ Para más información sobre la implementación del flujo de comprobantes, consu
 4. Push a la rama (`git push origin feature/NuevaCaracteristica`)
 5. Abre un Pull Request
 
-## 👨‍💻 Autor
+## Autor
 
 **Carmen Méndez** - [@carmendez-dev](https://github.com/carmendez-dev)
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto es parte de un trabajo universitario - Taller de Desarrollo de Software 2025.
 

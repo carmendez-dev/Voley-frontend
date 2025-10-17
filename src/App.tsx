@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navigation from './components/Navigation';
 import GestionPagos from './components/GestionPagos';
 import GestionUsuarios from './components/GestionUsuarios';
+import GestionTorneos from './components/GestionTorneos';
 import Reportes from './components/Reportes';
 import { Settings } from 'lucide-react';
 
@@ -14,6 +15,8 @@ function App() {
         return <GestionPagos />;
       case 'usuarios':
         return <GestionUsuarios />;
+      case 'torneos':
+        return <GestionTorneos />;
       case 'reportes':
         return <Reportes />;
       case 'configuracion':
