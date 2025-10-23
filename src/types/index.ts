@@ -13,29 +13,61 @@ export interface PagoCreateRequest {
 
 export interface Usuario {
   id: number;
-  nombres: string;
-  apellidos: string;
-  nombreCompleto?: string; // Computed: nombres + apellidos
-  fechaNacimiento?: string;
+  primerNombre: string;
+  segundoNombre?: string;
+  tercerNombre?: string;
+  primerApellido: string;
+  segundoApellido?: string;
+  nombreCompleto: string; // Computed: concatenación automática
+  fechaNacimiento: string;
   cedula: string;
+  genero: 'Masculino' | 'Femenino';
   email: string;
   celular: string;
-  genero?: 'MASCULINO' | 'FEMENINO';
+  direccion?: string;
+  contactoEmergencia?: string;
+  estado: 'Activo' | 'Inactivo';
+  peso?: number;
+  altura?: number;
+  imc?: number; // Calculado automáticamente
+  edad?: number; // Calculado automáticamente
+  fechaRegistro: string;
+  updatedAt?: string;
+  // Campos de compatibilidad (deprecated)
+  nombres?: string;
+  apellidos?: string;
   tipo?: 'JUGADOR' | 'ENTRENADOR' | 'ADMINISTRADOR';
-  estado?: 'ACTIVO' | 'INACTIVO' | 'Activo' | 'Inactivo'; // Backend puede enviar ambos formatos
-  fechaRegistro?: string;
 }
 
 export interface UsuarioCreateRequest {
-  nombres: string;
-  apellidos: string;
+  primerNombre: string;
+  segundoNombre?: string;
+  tercerNombre?: string;
+  primerApellido: string;
+  segundoApellido?: string;
   fechaNacimiento: string;
   cedula: string;
+  genero: 'Masculino' | 'Femenino';
   email: string;
   celular: string;
-  genero: 'MASCULINO' | 'FEMENINO';
-  tipo: 'JUGADOR' | 'ENTRENADOR' | 'ADMINISTRADOR';
-  estado: 'ACTIVO' | 'INACTIVO';
+  direccion?: string;
+  contactoEmergencia?: string;
+  peso?: number;
+  altura?: number;
+}
+
+export interface UsuarioEstadisticas {
+  totalUsuarios: number;
+  usuariosActivos: number;
+  usuariosInactivos: number;
+  porcentajeActivos: number;
+  distribucioGenero: {
+    Masculino: number;
+    Femenino: number;
+  };
+  edadPromedio: number;
+  imcPromedio: number;
+  registrosUltimoMes: number;
 }
 
 export interface Pago {
@@ -218,6 +250,7 @@ export interface CategoriaFiltros {
 // ==================== RELACIONES TORNEO-CATEGORÍA ====================
 
 export interface TorneoCategoria {
+  idTorneoCategoria: number; // ID de la relación
   idCategoria: number;
   nombre: string;
   idTorneo: number;
@@ -268,4 +301,46 @@ export interface CategoriaEquipo {
   nombreCategoria: string;
   descripcionCategoria?: string;
   genero: GeneroCategoria;
+}
+
+// ==================== INSCRIPCIONES ====================
+
+export type EstadoInscripcion = 'inscrito' | 'retirado' | 'descalificado';
+
+export const EstadosInscripcion = {
+  INSCRITO: 'inscrito' as EstadoInscripcion,
+  RETIRADO: 'retirado' as EstadoInscripcion,
+  DESCALIFICADO: 'descalificado' as EstadoInscripcion
+};
+
+export interface Inscripcion {
+  idInscripcion?: number;
+  idTorneoCategoria: number;
+  idEquipo: number;
+  estado: EstadoInscripcion;
+  observaciones?: string;
+  fechaInscripcion?: string;
+  // Información adicional (solo lectura)
+  nombreTorneo?: string;
+  nombreCategoria?: string;
+  nombreEquipo?: string;
+}
+
+export interface CrearInscripcionDTO {
+  idTorneoCategoria: number;
+  idEquipo: number;
+  observaciones?: string;
+}
+
+export interface ActualizarInscripcionDTO {
+  estado: EstadoInscripcion;
+  observaciones?: string;
+}
+
+export interface InscripcionResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  data?: Inscripcion | Inscripcion[];
+  total?: number;
 }

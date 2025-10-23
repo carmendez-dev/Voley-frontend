@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Plus, Edit, Trash2, Award, Users, Venus, Mars, BarChart3, UserCheck } from 'lucide-react';
+import { Search, Filter, Plus, Edit, Trash2, Award, Users, Venus, Mars, BarChart3 } from 'lucide-react';
 import { categoriaService } from '../../services/api';
 import type { 
   Categoria, 
@@ -11,7 +11,6 @@ import EstadoBadgeGenero from '../shared/EstadoBadgeGenero';
 import CrearCategoriaModal from './CrearCategoriaModal';
 import EditarCategoriaModal from './EditarCategoriaModal';
 import EliminarCategoriaModal from './EliminarCategoriaModal';
-import GestionEquiposCategoriaModal from './GestionEquiposCategoriaModal';
 import EstadisticasCategoriasModal from './EstadisticasCategoriasModal';
 
 const GestionCategorias: React.FC = () => {
@@ -24,7 +23,6 @@ const GestionCategorias: React.FC = () => {
   const [showEditarModal, setShowEditarModal] = useState(false);
   const [showEliminarModal, setShowEliminarModal] = useState(false);
   const [showEstadisticasModal, setShowEstadisticasModal] = useState(false);
-  const [showGestionEquiposModal, setShowGestionEquiposModal] = useState(false);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria | null>(null);
   const [estadisticas, setEstadisticas] = useState<CategoriaEstadisticas | null>(null);
 
@@ -87,11 +85,6 @@ const GestionCategorias: React.FC = () => {
     setShowEliminarModal(true);
   };
 
-  const handleGestionEquipos = (categoria: Categoria) => {
-    setCategoriaSeleccionada(categoria);
-    setShowGestionEquiposModal(true);
-  };
-
   const handleModalSuccess = () => {
     cargarCategorias();
     cargarEstadisticas();
@@ -103,7 +96,6 @@ const GestionCategorias: React.FC = () => {
     setShowEditarModal(false);
     setShowEliminarModal(false);
     setShowEstadisticasModal(false);
-    setShowGestionEquiposModal(false);
     setCategoriaSeleccionada(null);
   };
 
@@ -301,13 +293,6 @@ const GestionCategorias: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
-                        onClick={() => handleGestionEquipos(categoria)}
-                        className="text-green-600 hover:text-green-900 inline-flex items-center"
-                        title="Gestionar equipos"
-                      >
-                        <UserCheck className="h-4 w-4" />
-                      </button>
-                      <button
                         onClick={() => handleEditarCategoria(categoria)}
                         className="text-blue-600 hover:text-blue-900 inline-flex items-center"
                         title="Editar categoría"
@@ -358,14 +343,6 @@ const GestionCategorias: React.FC = () => {
         <EstadisticasCategoriasModal
           estadisticas={estadisticas}
           onClose={onCloseModal}
-        />
-      )}
-
-      {showGestionEquiposModal && categoriaSeleccionada && (
-        <GestionEquiposCategoriaModal
-          isOpen={showGestionEquiposModal}
-          onClose={onCloseModal}
-          categoria={categoriaSeleccionada}
         />
       )}
     </div>

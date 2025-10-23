@@ -5,6 +5,7 @@ import GestionUsuarios from './components/usuarios/GestionUsuarios';
 import GestionEquipos from './components/equipos/GestionEquipos';
 import GestionTorneos from './components/torneos/GestionTorneos';
 import GestionCategorias from './components/categorias/GestionCategorias';
+import GestionInscripciones from './components/inscripciones/GestionInscripciones';
 import Reportes from './components/reportes/Reportes';
 import { Settings } from 'lucide-react';
 
@@ -23,6 +24,8 @@ function App() {
         return <GestionTorneos />;
       case 'categorias':
         return <GestionCategorias />;
+      case 'inscripciones':
+        return <GestionInscripciones />;
       case 'reportes':
         return <Reportes />;
       case 'configuracion':
