@@ -130,6 +130,7 @@ const RegistrarSetModal: React.FC<RegistrarSetModalProps> = ({
     }
 
     try {
+      // Crear la acción
       await accionesJuegoService.crearAccion({
         idSetPartido,
         idTipoAccion: tipoAccionSeleccionado,
@@ -138,18 +139,32 @@ const RegistrarSetModal: React.FC<RegistrarSetModalProps> = ({
         posicionVisitante: posicionSeleccionada || 0
       });
 
+      // Si es un punto, incrementar el marcador correspondiente
+      const esPunto = resultadosAccion.find(r => r.idResultadoAccion === idResultadoAccion)?.descripcion === 'Punto';
+      
+      if (esPunto) {
+        if (jugadorSeleccionado !== null) {
+          // Punto del equipo local
+          const nuevosPuntosLocal = puntosLocal + 1;
+          setPuntosLocal(nuevosPuntosLocal);
+          await onGuardar(numeroSet, nuevosPuntosLocal, puntosVisitante);
+        } else if (posicionSeleccionada !== null) {
+          // Punto del equipo visitante
+          const nuevosPuntosVisitante = puntosVisitante + 1;
+          setPuntosVisitante(nuevosPuntosVisitante);
+          await onGuardar(numeroSet, puntosLocal, nuevosPuntosVisitante);
+        }
+      }
+
       success('Acción registrada exitosamente');
       
-      // Recargar acciones y actualizar puntos
+      // Recargar acciones
       await cargarAcciones();
       
       // Limpiar selecciones
       setJugadorSeleccionado(null);
       setPosicionSeleccionada(null);
       setTipoAccionSeleccionado(null);
-      
-      // Actualizar puntos del set
-      await onGuardar(numeroSet, puntosLocal, puntosVisitante);
     } catch (err) {
       console.error('Error registrando acción:', err);
       const errorMessage = err instanceof Error ? err.message : 'Error al registrar la acción';
@@ -171,6 +186,30 @@ const RegistrarSetModal: React.FC<RegistrarSetModalProps> = ({
     if (accionAEliminar === null) return;
 
     try {
+      // Buscar la acción que se va a eliminar
+      const accion = acciones.find(a => a.idAccionJuego === accionAEliminar);
+      
+      if (accion) {
+        // Verificar si era un punto
+        const esPunto = accion.resultadoAccionDescripcion === 'Punto';
+        
+        if (esPunto) {
+          // Decrementar el marcador correspondiente
+          if (accion.idRoster > 0) {
+            // Era un punto del equipo local
+            const nuevosPuntosLocal = Math.max(0, puntosLocal - 1);
+            setPuntosLocal(nuevosPuntosLocal);
+            await onGuardar(numeroSet, nuevosPuntosLocal, puntosVisitante);
+          } else if (accion.posicionVisitante > 0) {
+            // Era un punto del equipo visitante
+            const nuevosPuntosVisitante = Math.max(0, puntosVisitante - 1);
+            setPuntosVisitante(nuevosPuntosVisitante);
+            await onGuardar(numeroSet, puntosLocal, nuevosPuntosVisitante);
+          }
+        }
+      }
+
+      // Eliminar la acción
       await accionesJuegoService.eliminarAccion(accionAEliminar);
       success('Acción eliminada exitosamente');
       await cargarAcciones();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DollarSign, Users, BarChart3 } from 'lucide-react';
+import { DollarSign, Users, BarChart3, UserCheck } from 'lucide-react';
 import SectionCard from '../components/shared/SectionCard';
 
 const HomePage: React.FC = () => {
@@ -22,6 +22,14 @@ const HomePage: React.FC = () => {
       icon: Users,
       color: 'blue' as const,
       path: '/jugadores'
+    },
+    {
+      id: 'profesores',
+      title: 'Gestión de Profesores',
+      description: 'Administra profesores y sus datos en el sistema',
+      icon: UserCheck,
+      color: 'indigo' as const,
+      path: '/profesores'
     },
     {
       id: 'estadisticas',
@@ -51,7 +59,7 @@ const HomePage: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {sections.map((section) => (
             <SectionCard
               key={section.id}

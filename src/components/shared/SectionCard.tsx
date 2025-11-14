@@ -5,7 +5,7 @@ interface SectionCardProps {
   title: string;
   description: string;
   icon: LucideIcon;
-  color: 'green' | 'blue' | 'purple';
+  color: 'green' | 'blue' | 'purple' | 'indigo';
   onClick: () => void;
 }
 
@@ -28,6 +28,12 @@ const SectionCard: React.FC<SectionCardProps> = ({
       icon: 'text-blue-600',
       border: 'border-blue-200',
       hover: 'hover:border-blue-400 hover:shadow-blue-100'
+    },
+    indigo: {
+      bg: 'bg-indigo-50',
+      icon: 'text-indigo-600',
+      border: 'border-indigo-200',
+      hover: 'hover:border-indigo-400 hover:shadow-indigo-100'
     },
     purple: {
       bg: 'bg-purple-50',

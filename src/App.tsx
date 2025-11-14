@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import GestionPagosLayout from './layouts/GestionPagosLayout';
 import GestionJugadoresLayout from './layouts/GestionJugadoresLayout';
+import ProfesoresPage from './pages/ProfesoresPage';
 import EstadisticasPage from './pages/EstadisticasPage';
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
         
         {/* Gestión de Jugadores */}
         <Route path="/jugadores" element={<GestionJugadoresLayout />} />
+        
+        {/* Gestión de Profesores */}
+        <Route path="/profesores" element={<ProfesoresPage />} />
         
         {/* Estadísticas */}
         <Route path="/estadisticas" element={<EstadisticasPage />} />

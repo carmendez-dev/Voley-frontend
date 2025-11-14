@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, MapPin, Users, Trophy, Loader2 } from 'lucide-react';
+import { X, Calendar, MapPin, Users, Trophy, Loader2, Target, AlertCircle } from 'lucide-react';
 import type { Partido, ResultadoPartido } from '../../types/partido.types';
 import type { SetPartido } from '../../types/set.types';
+import type { EstadisticasPartido } from '../../types/estadisticas.types';
 import setsService from '../../services/sets.service';
+import estadisticasService from '../../services/estadisticas.service';
 
 interface DetallePartidoModalProps {
   partido: Partido | null;
@@ -17,11 +19,14 @@ const DetallePartidoModal: React.FC<DetallePartidoModalProps> = ({
 }) => {
   const [sets, setSets] = useState<SetPartido[]>([]);
   const [loadingSets, setLoadingSets] = useState(false);
+  const [estadisticas, setEstadisticas] = useState<EstadisticasPartido | null>(null);
+  const [loadingEstadisticas, setLoadingEstadisticas] = useState(false);
 
-  // Cargar sets cuando se abre el modal y el partido no está pendiente
+  // Cargar sets y estadísticas cuando se abre el modal y el partido no está pendiente
   useEffect(() => {
     if (isOpen && partido && partido.resultado !== 'Pendiente') {
       cargarSets();
+      cargarEstadisticas();
     }
   }, [isOpen, partido]);
 
@@ -37,6 +42,21 @@ const DetallePartidoModal: React.FC<DetallePartidoModalProps> = ({
       setSets([]);
     } finally {
       setLoadingSets(false);
+    }
+  };
+
+  const cargarEstadisticas = async () => {
+    if (!partido) return;
+
+    setLoadingEstadisticas(true);
+    try {
+      const data = await estadisticasService.obtenerEstadisticasPartido(partido.idPartido);
+      setEstadisticas(data);
+    } catch (err) {
+      console.error('Error cargando estadísticas:', err);
+      setEstadisticas(null);
+    } finally {
+      setLoadingEstadisticas(false);
     }
   };
 
@@ -257,6 +277,140 @@ const DetallePartidoModal: React.FC<DetallePartidoModalProps> = ({
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Estadísticas del partido */}
+          {partido.resultado !== 'Pendiente' && (
+            <div className="border-t pt-6">
+              <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Target className="h-5 w-5 mr-2 text-indigo-600" />
+                Estadísticas del Partido
+              </h4>
+
+              {loadingEstadisticas ? (
+                <div className="flex flex-col items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 text-indigo-600 animate-spin mb-2" />
+                  <p className="text-gray-600">Cargando estadísticas...</p>
+                </div>
+              ) : !estadisticas ? (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <p className="text-sm text-yellow-800">
+                    No hay estadísticas disponibles para este partido.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* Resumen de sets */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 text-center">
+                      <p className="text-sm font-medium text-blue-700 mb-1">Sets Ganados</p>
+                      <p className="text-3xl font-bold text-blue-900">{estadisticas.setsGanadosLocal}</p>
+                      <p className="text-xs text-blue-600 mt-1">{partido.nombreEquipoLocal}</p>
+                    </div>
+                    <div className="bg-purple-50 border-2 border-purple-300 rounded-lg p-4 text-center">
+                      <p className="text-sm font-medium text-purple-700 mb-1">Sets Ganados</p>
+                      <p className="text-3xl font-bold text-purple-900">{estadisticas.setsGanadosVisitante}</p>
+                      <p className="text-xs text-purple-600 mt-1">{partido.nombreEquipoVisitante}</p>
+                    </div>
+                  </div>
+
+                  {/* Estadísticas por equipo */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Equipo Local */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h5 className="font-semibold text-blue-900 mb-3 text-center">
+                        {partido.nombreEquipoLocal}
+                      </h5>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-blue-700">Total Puntos:</span>
+                          <span className="text-lg font-bold text-green-600">{estadisticas.puntosLocal}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-blue-700">Total Errores:</span>
+                          <span className="text-lg font-bold text-red-600">{estadisticas.erroresLocal}</span>
+                        </div>
+                      </div>
+
+                      {estadisticas.puntosPorTipoLocal.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-blue-300">
+                          <p className="text-xs font-semibold text-blue-800 mb-2">Puntos por Tipo:</p>
+                          <div className="space-y-1">
+                            {estadisticas.puntosPorTipoLocal.map((stat, idx) => (
+                              <div key={idx} className="flex justify-between text-xs">
+                                <span className="text-blue-700">{stat.tipoAccion}:</span>
+                                <span className="font-medium text-blue-900">{stat.cantidad}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {estadisticas.erroresPorTipoLocal.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-blue-300">
+                          <p className="text-xs font-semibold text-blue-800 mb-2">Errores por Tipo:</p>
+                          <div className="space-y-1">
+                            {estadisticas.erroresPorTipoLocal.map((stat, idx) => (
+                              <div key={idx} className="flex justify-between text-xs">
+                                <span className="text-blue-700">{stat.tipoAccion}:</span>
+                                <span className="font-medium text-blue-900">{stat.cantidad}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Equipo Visitante */}
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                      <h5 className="font-semibold text-purple-900 mb-3 text-center">
+                        {partido.nombreEquipoVisitante}
+                      </h5>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-purple-700">Total Puntos:</span>
+                          <span className="text-lg font-bold text-green-600">{estadisticas.puntosVisitante}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-purple-700">Total Errores:</span>
+                          <span className="text-lg font-bold text-red-600">{estadisticas.erroresVisitante}</span>
+                        </div>
+                      </div>
+
+                      {estadisticas.puntosPorTipoVisitante.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-purple-300">
+                          <p className="text-xs font-semibold text-purple-800 mb-2">Puntos por Tipo:</p>
+                          <div className="space-y-1">
+                            {estadisticas.puntosPorTipoVisitante.map((stat, idx) => (
+                              <div key={idx} className="flex justify-between text-xs">
+                                <span className="text-purple-700">{stat.tipoAccion}:</span>
+                                <span className="font-medium text-purple-900">{stat.cantidad}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {estadisticas.erroresPorTipoVisitante.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-purple-300">
+                          <p className="text-xs font-semibold text-purple-800 mb-2">Errores por Tipo:</p>
+                          <div className="space-y-1">
+                            {estadisticas.erroresPorTipoVisitante.map((stat, idx) => (
+                              <div key={idx} className="flex justify-between text-xs">
+                                <span className="text-purple-700">{stat.tipoAccion}:</span>
+                                <span className="font-medium text-purple-900">{stat.cantidad}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

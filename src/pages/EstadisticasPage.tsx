@@ -1,13 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BarChart3, TrendingUp, Users, Trophy, Home, UserCheck, Calendar } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, Trophy, UserCheck, Calendar, Target, Award, Loader2 } from 'lucide-react';
 import SecondaryNavigation from '../components/shared/SecondaryNavigation';
 import GestionEquiposVisitantes from '../components/equipos-visitantes/GestionEquiposVisitantes';
 import GestionPartidos from '../components/partidos/GestionPartidos';
+import estadisticasService from '../services/estadisticas.service';
+import type { EstadisticasGenerales } from '../types/estadisticas.types';
 
 const EstadisticasPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState<'dashboard' | 'equipos-visitantes' | 'partidos'>('dashboard');
+  const [estadisticas, setEstadisticas] = useState<EstadisticasGenerales | null>(null);
+  const [loadingEstadisticas, setLoadingEstadisticas] = useState(true);
+
+  useEffect(() => {
+    if (activeModule === 'dashboard') {
+      cargarEstadisticas();
+    }
+  }, [activeModule]);
+
+  const cargarEstadisticas = async () => {
+    setLoadingEstadisticas(true);
+    try {
+      const data = await estadisticasService.obtenerEstadisticasGenerales();
+      setEstadisticas(data);
+    } catch (err) {
+      console.error('Error cargando estadísticas:', err);
+    } finally {
+      setLoadingEstadisticas(false);
+    }
+  };
 
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -27,88 +49,143 @@ const EstadisticasPage: React.FC = () => {
     }
   };
 
-  const renderDashboard = () => (
-    <>
-      <div className="text-center mb-12">
-        {/* Icon */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-purple-100 w-24 h-24 rounded-full flex items-center justify-center">
-            <BarChart3 className="w-12 h-12 text-purple-600" />
+  const renderDashboard = () => {
+    if (loadingEstadisticas) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12">
+          <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mb-4" />
+          <p className="text-gray-600">Cargando estadísticas...</p>
+        </div>
+      );
+    }
+
+    if (!estadisticas) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-gray-600">No se pudieron cargar las estadísticas</p>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+            <Trophy className="h-6 w-6 mr-2 text-indigo-600" />
+            Estadísticas Generales
+          </h2>
+          <p className="text-gray-600">Resumen completo del rendimiento del sistema</p>
+        </div>
+        
+        {/* Tarjetas de Resumen */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Total Partidos */}
+          <div className="bg-white rounded-lg shadow-md border-2 border-indigo-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Partidos</p>
+                <p className="text-3xl font-bold text-indigo-600 mt-2">{estadisticas.totalPartidos}</p>
+              </div>
+              <Trophy className="h-12 w-12 text-indigo-400" />
+            </div>
+          </div>
+
+          {/* Partidos Ganados */}
+          <div className="bg-white rounded-lg shadow-md border-2 border-green-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Ganados</p>
+                <p className="text-3xl font-bold text-green-600 mt-2">{estadisticas.partidosGanados}</p>
+              </div>
+              <Award className="h-12 w-12 text-green-400" />
+            </div>
+          </div>
+
+          {/* Partidos Perdidos */}
+          <div className="bg-white rounded-lg shadow-md border-2 border-red-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Perdidos</p>
+                <p className="text-3xl font-bold text-red-600 mt-2">{estadisticas.partidosPerdidos}</p>
+              </div>
+              <Target className="h-12 w-12 text-red-400" />
+            </div>
+          </div>
+
+          {/* Partidos Pendientes */}
+          <div className="bg-white rounded-lg shadow-md border-2 border-yellow-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Pendientes</p>
+                <p className="text-3xl font-bold text-yellow-600 mt-2">{estadisticas.partidosPendientes}</p>
+              </div>
+              <TrendingUp className="h-12 w-12 text-yellow-400" />
+            </div>
           </div>
         </div>
 
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Estadísticas en Desarrollo
-        </h2>
-
-        {/* Description */}
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-          Esta sección estará disponible próximamente con reportes completos y métricas del sistema.
-        </p>
-
-        {/* Coming Soon Badge */}
-        <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium">
-          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-          </svg>
-          Próximamente
-        </div>
-      </div>
-
-      {/* Placeholder Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {[
-          {
-            icon: TrendingUp,
-            title: 'Métricas de Pagos',
-            description: 'Análisis financiero y tendencias de pagos del sistema'
-          },
-          {
-            icon: Users,
-            title: 'Estadísticas de Jugadores',
-            description: 'Datos demográficos y participación de jugadores'
-          },
-          {
-            icon: Trophy,
-            title: 'Reportes de Torneos',
-            description: 'Resultados y estadísticas deportivas de torneos'
-          }
-        ].map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-sm border-2 border-gray-200 p-6 hover:shadow-md transition-shadow"
-            >
-              <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                <Icon className="w-6 h-6 text-purple-600" />
+        {/* Estadísticas Detalladas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Sets */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border border-blue-200">
+            <h3 className="text-lg font-semibold text-blue-900 mb-4">Sets</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-blue-700">Total Jugados:</span>
+                <span className="text-xl font-bold text-blue-900">{estadisticas.totalSetsJugados}</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {item.title}
-              </h3>
-              <p className="text-sm text-gray-600">
-                {item.description}
-              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-blue-700">Ganados:</span>
+                <span className="text-xl font-bold text-green-600">{estadisticas.setsGanados}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-blue-700">Perdidos:</span>
+                <span className="text-xl font-bold text-red-600">{estadisticas.setsPerdidos}</span>
+              </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
 
-      {/* Additional Info */}
-      <div className="mt-12 text-center">
-        <p className="text-sm text-gray-500">
-          Mientras tanto, puedes acceder a los reportes financieros desde la sección de{' '}
-          <button
-            onClick={() => navigate('/pagos')}
-            className="text-indigo-600 hover:text-indigo-700 font-medium underline"
-          >
-            Gestión de Pagos
-          </button>
-        </p>
-      </div>
-    </>
-  );
+          {/* Puntos y Errores */}
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md p-6 border border-green-200">
+            <h3 className="text-lg font-semibold text-green-900 mb-4">Rendimiento</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-green-700">Total Puntos:</span>
+                <span className="text-xl font-bold text-green-600">{estadisticas.totalPuntos}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-green-700">Total Errores:</span>
+                <span className="text-xl font-bold text-red-600">{estadisticas.totalErrores}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-green-700">Efectividad:</span>
+                <span className="text-xl font-bold text-green-900">
+                  {estadisticas.totalPuntos > 0 
+                    ? ((estadisticas.totalPuntos / (estadisticas.totalPuntos + estadisticas.totalErrores)) * 100).toFixed(1)
+                    : 0}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Walkovers */}
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-md p-6 border border-purple-200">
+            <h3 className="text-lg font-semibold text-purple-900 mb-4">Walkovers</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-purple-700">A Favor:</span>
+                <span className="text-xl font-bold text-green-600">{estadisticas.partidosWalkover}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-purple-700">En Contra:</span>
+                <span className="text-xl font-bold text-red-600">{estadisticas.partidosWalkoverContra}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FAFAEF' }}>
