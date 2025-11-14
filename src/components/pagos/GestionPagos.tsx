@@ -142,9 +142,10 @@ const GestionPagos: React.FC = () => {
     // Aplicar filtros de búsqueda si existen
     if (searchTerm) {
       result = result.filter(({ usuario }) => 
-        usuario.nombres.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        usuario.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        usuario.cedula.includes(searchTerm) ||
+        (usuario.nombreCompleto || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (usuario.nombres || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (usuario.apellidos || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (usuario.cedula || '').includes(searchTerm) ||
         usuario.email.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -294,7 +295,7 @@ const GestionPagos: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
-                        {`${usuario.nombres} ${usuario.apellidos}`}
+                        {usuario.nombreCompleto || `${usuario.nombres || ''} ${usuario.apellidos || ''}`.trim() || 'Sin nombre'}
                       </div>
                       <div className="text-sm text-gray-500">
                         {usuario.email}

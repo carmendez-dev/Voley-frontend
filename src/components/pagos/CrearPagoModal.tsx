@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Upload, FileCheck } from 'lucide-react';
+import { X, Upload, FileCheck, Search } from 'lucide-react';
 import { pagoService } from '../../services/api';
 import type { Usuario, PagoCreateRequest } from '../../types';
 
@@ -24,6 +24,8 @@ const CrearPagoModal: React.FC<CrearPagoModalProps> = ({ usuarios, onClose, onSu
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [busquedaUsuario, setBusquedaUsuario] = useState('');
+  const [usuariosFiltrados, setUsuariosFiltrados] = useState<Usuario[]>(usuarios);
 
   // Bloquear scroll del body cuando el modal está abierto
   useEffect(() => {
@@ -41,6 +43,33 @@ const CrearPagoModal: React.FC<CrearPagoModalProps> = ({ usuarios, onClose, onSu
       window.scrollTo(0, scrollY);
     };
   }, []);
+
+  // Filtrar usuarios según búsqueda
+  useEffect(() => {
+    if (!busquedaUsuario.trim()) {
+      setUsuariosFiltrados(usuarios);
+      return;
+    }
+
+    const busquedaLower = busquedaUsuario.toLowerCase();
+    const filtrados = usuarios.filter(usuario => {
+      const nombreCompleto = usuario.nombreCompleto?.toLowerCase() || '';
+      const nombres = usuario.nombres?.toLowerCase() || '';
+      const apellidos = usuario.apellidos?.toLowerCase() || '';
+      const email = usuario.email?.toLowerCase() || '';
+      const cedula = usuario.cedula || '';
+
+      return (
+        nombreCompleto.includes(busquedaLower) ||
+        nombres.includes(busquedaLower) ||
+        apellidos.includes(busquedaLower) ||
+        email.includes(busquedaLower) ||
+        cedula.includes(busquedaLower)
+      );
+    });
+
+    setUsuariosFiltrados(filtrados);
+  }, [busquedaUsuario, usuarios]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,25 +205,50 @@ const CrearPagoModal: React.FC<CrearPagoModalProps> = ({ usuarios, onClose, onSu
             </div>
           )}
 
-          {/* Usuario */}
+          {/* Usuario con búsqueda */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Usuario *
             </label>
+            
+            {/* Campo de búsqueda con icono */}
+            <div className="relative mb-2">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                type="text"
+                placeholder="Buscar por nombre, email o cédula..."
+                value={busquedaUsuario}
+                onChange={(e) => setBusquedaUsuario(e.target.value)}
+                className="input-field w-full pl-10"
+              />
+            </div>
+            
+            {/* Select de usuarios filtrados */}
             <select
               name="usuarioId"
               value={formData.usuarioId || ''}
               onChange={handleChange}
               required
               className="input-field w-full"
+              size={6}
             >
-              <option value="">Seleccionar usuario</option>
-              {usuarios.map((usuario) => (
-                <option key={usuario.id} value={usuario.id}>
-                  {usuario.nombres} {usuario.apellidos} - {usuario.email}
-                </option>
-              ))}
+              <option value="">-- Seleccionar usuario --</option>
+              {usuariosFiltrados.length === 0 ? (
+                <option disabled>No se encontraron usuarios</option>
+              ) : (
+                usuariosFiltrados.map((usuario) => (
+                  <option key={usuario.id} value={usuario.id}>
+                    {usuario.nombreCompleto || `${usuario.nombres} ${usuario.apellidos}`} • {usuario.cedula}
+                  </option>
+                ))
+              )}
             </select>
+            
+            {busquedaUsuario && (
+              <p className="text-xs text-gray-500 mt-1">
+                {usuariosFiltrados.length} usuario(s) encontrado(s)
+              </p>
+            )}
           </div>
 
           {/* Período */}

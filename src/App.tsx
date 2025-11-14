@@ -1,72 +1,29 @@
-import { useState } from 'react';
-import Navigation from './components/Navigation';
-import GestionPagos from './components/pagos/GestionPagos';
-import GestionUsuarios from './components/usuarios/GestionUsuarios';
-import GestionEquipos from './components/equipos/GestionEquipos';
-import GestionTorneos from './components/torneos/GestionTorneos';
-import GestionCategorias from './components/categorias/GestionCategorias';
-import GestionInscripciones from './components/inscripciones/GestionInscripciones';
-import Reportes from './components/reportes/Reportes';
-import { Settings } from 'lucide-react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import GestionPagosLayout from './layouts/GestionPagosLayout';
+import GestionJugadoresLayout from './layouts/GestionJugadoresLayout';
+import EstadisticasPage from './pages/EstadisticasPage';
 
 function App() {
-  const [activeSection, setActiveSection] = useState('pagos');
-
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'pagos':
-        return <GestionPagos />;
-      case 'usuarios':
-        return <GestionUsuarios />;
-      case 'equipos':
-        return <GestionEquipos />;
-      case 'torneos':
-        return <GestionTorneos />;
-      case 'categorias':
-        return <GestionCategorias />;
-      case 'inscripciones':
-        return <GestionInscripciones />;
-      case 'reportes':
-        return <Reportes />;
-      case 'configuracion':
-        return (
-          <div className="text-center py-12">
-            <Settings className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-gray-600 mb-2">
-              Configuración
-            </h2>
-            <p className="text-gray-500">
-              Panel de configuración próximamente disponible
-            </p>
-          </div>
-        );
-      default:
-        return <GestionPagos />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <Navigation 
-        activeSection={activeSection} 
-        onSectionChange={setActiveSection} 
-      />
-      
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {renderContent()}
-      </main>
-      
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-sm text-gray-500">
-            © 2025 Sistema de Gestión Voley. Todos los derechos reservados.
-          </div>
-        </div>
-      </footer>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Página Principal */}
+        <Route path="/" element={<HomePage />} />
+        
+        {/* Gestión de Pagos */}
+        <Route path="/pagos" element={<GestionPagosLayout />} />
+        
+        {/* Gestión de Jugadores */}
+        <Route path="/jugadores" element={<GestionJugadoresLayout />} />
+        
+        {/* Estadísticas */}
+        <Route path="/estadisticas" element={<EstadisticasPage />} />
+        
+        {/* Redirect por defecto */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

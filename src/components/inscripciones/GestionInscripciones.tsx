@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, FileText, Trash2, Eye, Filter } from 'lucide-react';
+import { Plus, Search, FileText, Trash2, Eye, Filter, Users } from 'lucide-react';
 import inscripcionesService from '../../services/inscripciones.service';
 import type { Inscripcion, EstadoInscripcion } from '../../types';
 import CrearInscripcionModal from './CrearInscripcionModal';
 import DetalleInscripcionModal from './DetalleInscripcionModal';
 import EliminarInscripcionModal from './EliminarInscripcionModal';
+import RosterEquipoModal from './RosterEquipoModal';
 
 const GestionInscripciones: React.FC = () => {
   // Estados principales
@@ -21,6 +22,7 @@ const GestionInscripciones: React.FC = () => {
   const [modalCrear, setModalCrear] = useState(false);
   const [modalDetalle, setModalDetalle] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
+  const [modalRoster, setModalRoster] = useState(false);
   const [inscripcionSeleccionada, setInscripcionSeleccionada] = useState<Inscripcion | null>(null);
 
   // Cargar datos iniciales
@@ -86,10 +88,17 @@ const GestionInscripciones: React.FC = () => {
     setModalEliminar(true);
   };
 
+  const abrirModalRoster = (inscripcion: Inscripcion) => {
+    setInscripcionSeleccionada(inscripcion);
+    setModalRoster(true);
+  };
+
   const cerrarModales = () => {
     setModalCrear(false);
     setModalDetalle(false);
+    setModalRoster(false);
     setModalEliminar(false);
+    setModalRoster(false);
     setInscripcionSeleccionada(null);
   };
 
@@ -270,6 +279,13 @@ const GestionInscripciones: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex justify-center space-x-2">
                         <button
+                          onClick={() => abrirModalRoster(inscripcion)}
+                          className="text-green-600 hover:text-green-700 p-1 rounded"
+                          title="Gestionar roster"
+                        >
+                          <Users size={16} />
+                        </button>
+                        <button
                           onClick={() => abrirModalDetalle(inscripcion)}
                           className="text-indigo-600 hover:text-indigo-700 p-1 rounded"
                           title="Ver detalle"
@@ -317,6 +333,14 @@ const GestionInscripciones: React.FC = () => {
           onClose={cerrarModales}
           inscripcion={inscripcionSeleccionada}
           onInscripcionEliminada={manejarInscripcionEliminada}
+        />
+      )}
+
+      {modalRoster && inscripcionSeleccionada && (
+        <RosterEquipoModal
+          isOpen={modalRoster}
+          onClose={cerrarModales}
+          inscripcion={inscripcionSeleccionada}
         />
       )}
     </div>
