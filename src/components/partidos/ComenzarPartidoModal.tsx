@@ -481,6 +481,7 @@ const ComenzarPartidoModal: React.FC<ComenzarPartidoModalProps> = ({
         partido={partido}
         jugadores={jugadores}
         numeroSet={setSeleccionado}
+        idSetPartido={getSetData(setSeleccionado)?.idSetPartido}
         puntosIniciales={
           getSetData(setSeleccionado)
             ? {
